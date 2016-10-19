@@ -38,11 +38,11 @@ public class MarvelApi {
   }
 
   public List<Comic> fetchMarvelComics(URI comicUri) throws IOException, URISyntaxException {
-    if (!store.isEmpty()) {
-      return store.readFromStore();
+    if (store.isDataAvailable(comicUri)) {
+      return store.readFromStore(comicUri);
     }
     List<Comic> comics = comicDownloader.downloadComics(comicUri);
-    store.save(comics);
+    store.save(comicUri, comics);
     return comics;
   }
 

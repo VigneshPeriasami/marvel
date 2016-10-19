@@ -2,6 +2,7 @@ package com.github.vigneshperiasami.marvel;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -11,7 +12,7 @@ public class UriBuilder {
   private int limit;
   private int offset;
 
-  public UriBuilder(String privateKey, String publicKey) {
+  UriBuilder(String privateKey, String publicKey) {
     this.privateKey = privateKey;
     this.publicKey = publicKey;
   }
@@ -31,8 +32,11 @@ public class UriBuilder {
   }
 
   private String appendAuthInfo(String marvelUrl) {
+    // to support caching
+    long timestamp = 1234;
     String withAuthInfo = marvelUrl + "?apikey=" + publicKey
-        + "&hash=" + getHash(System.currentTimeMillis());
+        + "&ts=" + timestamp
+        + "&hash=" + getHash(timestamp);
     if (limit > 0) {
       withAuthInfo += "&limit=" + limit;
     }
@@ -43,14 +47,20 @@ public class UriBuilder {
   }
 
   private String getHash(long timestamp) {
-    String hash = null;
+    return MD5((String.valueOf(timestamp) + privateKey + publicKey));
+  }
+
+  private String MD5(String md5) {
     try {
-      byte[] bytes = MessageDigest.getInstance("MD5").digest(
-          (String.valueOf(timestamp) + privateKey + publicKey).getBytes());
-      hash = new String(bytes);
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      byte[] array = md.digest(md5.getBytes());
+      StringBuffer sb = new StringBuffer();
+      for (int i = 0; i < array.length; ++i) {
+        sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+      }
+      return sb.toString();
+    } catch (java.security.NoSuchAlgorithmException e) {
     }
-    return hash;
+    return null;
   }
 }

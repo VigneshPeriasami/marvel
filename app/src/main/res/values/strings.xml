@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MarvelApp</string>
+    <string name="btn_budget">Filter</string>
+    <string name="edt_hnt_budget">Enter Budget</string>
 </resources>

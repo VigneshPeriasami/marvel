@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.2'
     }
 }
 
@@ -24,7 +24,11 @@ ext.libraries = [
         gson: 'com.google.code.gson:gson:2.7',
         googleTruth: 'com.google.truth:truth:0.30',
         junit: 'junit:junit:4.12',
-        v7Support: 'com.android.support:appcompat-v7:24.2.1'
+        v7Support: 'com.android.support:appcompat-v7:24.2.1',
+        v7CardView: 'com.android.support:cardview-v7:24.2.1',
+        v7RecyclerView: 'com.android.support:recyclerview-v7:24.2.1',
+        picasso: 'com.squareup.picasso:picasso:2.5.2',
+        marvelApi: project(':marvelapi')
 ]
 
 task clean(type: Delete) {
