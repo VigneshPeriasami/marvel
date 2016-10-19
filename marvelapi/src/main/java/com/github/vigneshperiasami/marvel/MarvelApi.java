@@ -4,6 +4,7 @@ import com.github.vigneshperiasami.marvel.models.Comic;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,25 +15,33 @@ import java.util.List;
 public class MarvelApi {
   private final Downloader comicDownloader;
   private final MarvelStore store;
+  private final String privateKey;
+  private final String publicKey;
 
   public MarvelApi(String privateKey, String publicKey) {
     this(new InMemoryStore(), privateKey, publicKey);
   }
 
   public MarvelApi(MarvelStore marvelStore, String privateKey, String publicKey) {
-    this(new ComicDownloader(new GsonComicParser(new Gson()), privateKey, publicKey), marvelStore);
+    this(new ComicDownloader(new GsonComicParser(new Gson())), marvelStore, privateKey, publicKey);
   }
 
-  MarvelApi(Downloader comicDownloader, MarvelStore store) {
+  MarvelApi(Downloader comicDownloader, MarvelStore store, String privateKey, String publicKey) {
     this.comicDownloader = comicDownloader;
     this.store = store;
+    this.privateKey = privateKey;
+    this.publicKey = publicKey;
   }
 
-  public List<Comic> fetchMarvelComics(String comicUrl) throws IOException, URISyntaxException {
+  public UriBuilder marvelUriBuilder() {
+    return new UriBuilder(privateKey, publicKey);
+  }
+
+  public List<Comic> fetchMarvelComics(URI comicUri) throws IOException, URISyntaxException {
     if (!store.isEmpty()) {
       return store.readFromStore();
     }
-    List<Comic> comics = comicDownloader.downloadComics(comicUrl);
+    List<Comic> comics = comicDownloader.downloadComics(comicUri);
     store.save(comics);
     return comics;
   }
