@@ -39,6 +39,7 @@ public class Comic {
     if (prices.length < 0) {
       return 0;
     }
+    // todo: cache
     for (Price price : prices) {
       if (price.type.equals("printPrice")) {
         return price.price;
