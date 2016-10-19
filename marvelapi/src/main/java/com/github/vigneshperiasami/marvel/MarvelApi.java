@@ -15,6 +15,10 @@ public class MarvelApi {
   private final Downloader comicDownloader;
   private final MarvelStore store;
 
+  public MarvelApi(String privateKey, String publicKey) {
+    this(new InMemoryStore(), privateKey, publicKey);
+  }
+
   public MarvelApi(MarvelStore marvelStore, String privateKey, String publicKey) {
     this(new ComicDownloader(new GsonComicParser(new Gson()), privateKey, publicKey), marvelStore);
   }
