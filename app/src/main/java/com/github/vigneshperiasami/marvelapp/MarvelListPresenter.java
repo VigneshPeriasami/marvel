@@ -27,6 +27,10 @@ public class MarvelListPresenter {
     this.marvelApi = marvelApi;
   }
 
+  public List<Comic> filterComic(List<Comic> from, double budget) {
+    return marvelApi.maxComicsInBudget(from, budget);
+  }
+
   public void loadData() {
     try {
       new AsyncDownloader().execute(paginatedUri(20, 100));
